@@ -9,9 +9,9 @@ using Xunit;
 
 namespace WebApi.Tests.Bindings.GestionDuBlog
 {
-    public class Context : ContextBase, IClassFixture<ApiServer>
+    public class BlogContext : ContextBase, IClassFixture<ApiServer>
     {
-        protected Context(ScenarioContext context, ApiServer server) : base(context) => Server = server;
+        protected BlogContext(ScenarioContext context, ApiServer server) : base(context) => Server = server;
 
         protected HttpResponseMessage? Response
         {

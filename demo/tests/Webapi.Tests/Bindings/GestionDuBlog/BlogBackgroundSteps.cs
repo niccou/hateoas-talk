@@ -15,9 +15,9 @@ using WebApi.Tests.Shared;
 
 namespace WebApi.Tests.Bindings.GestionDuBlog
 {
-    public class BackgroundSteps : Context
+    public class BlogBackgroundSteps : BlogContext
     {
-        protected BackgroundSteps(ScenarioContext context, ApiServer server) : base(context, server) { }
+        protected BlogBackgroundSteps(ScenarioContext context, ApiServer server) : base(context, server) { }
 
         private Mock<IGetBlog> BlogMock { get; } = new Mock<IGetBlog>();
 
