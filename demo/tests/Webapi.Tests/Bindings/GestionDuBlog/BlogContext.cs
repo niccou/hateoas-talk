@@ -19,9 +19,15 @@ namespace WebApi.Tests.Bindings.GestionDuBlog
             set => Set(value);
         }
 
-        protected ICollection<PostDto>? Posts
+        protected ICollection<PostSummaryDto>? PostSummaries
         {
-            get => Get<ICollection<PostDto>?>();
+            get => Get<ICollection<PostSummaryDto>?>();
+            set => Set(value);
+        }
+
+        protected PostDetailDto? PostDetail
+        {
+            get => Get<PostDetailDto?>();
             set => Set(value);
         }
 

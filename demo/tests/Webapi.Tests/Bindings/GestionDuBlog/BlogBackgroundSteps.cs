@@ -48,31 +48,50 @@ namespace WebApi.Tests.Bindings.GestionDuBlog
             Response = await Server!.Client.GetAsync(new Uri(route, UriKind.Relative)).ConfigureAwait(false);
         }
 
+        [When("Je veux voir le post (.*)")]
+        public async Task WhenJeVeuxVoirLePost(string title)
+        {
+            var route = $"/blog/post?title{title}";
+
+            Response = await Server!.Client.GetAsync(new Uri(route, UriKind.Relative)).ConfigureAwait(false);
+        }
+
+        [Then("Je recois un détail de post")]
+        public async Task ThenJeRecoisUnDetailDePost()
+        {
+            Response!.EnsureSuccessStatusCode();
+
+            PostDetail = await Response.Content
+                .ReadAsStringAsync()
+                .ContinueWith(read => read.Result.Deserialize<PostDetailDto>())
+                .ConfigureAwait(false);
+
+            PostDetail.Should().NotBeNull();
+        }
+
         [Then("Je recois une liste de posts")]
         public async Task ThenJeRecoisUneListeDePosts()
         {
-
             Response!.EnsureSuccessStatusCode();
 
-            Posts = await Response.Content
+            PostSummaries = await Response.Content
                 .ReadAsStringAsync()
-                .ContinueWith(read => read.Result.Deserialize<ICollection<PostDto>>())
+                .ContinueWith(read => read.Result.Deserialize<ICollection<PostSummaryDto>>())
                 .ConfigureAwait(false);
 
-            Posts.Should().NotBeNull();
+            PostSummaries.Should().NotBeNull();
         }
 
         [Then("Je vois uniquement les posts")]
         public void ThenJeVoisUniquementLesPosts(Table table)
         {
-            Posts.Should().BeEquivalentTo(table.CreateSet(CreatePostDto));
+            PostSummaries.Should().BeEquivalentTo(table.CreateSet(CreatePostDto));
         }
 
-        private static PostDto CreatePostDto(TableRow row) => new PostDto
+        private static PostSummaryDto CreatePostDto(TableRow row) => new PostSummaryDto
         {
             Author = row["Author"],
-            Title = row["Title"],
-            Description = row["Description"],
+            Title = row["Title"]
         };
 
         private static IReadOnlyCollection<Post> CreatePostsCollection(Table table)

@@ -1,35 +1,69 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Net;
+using WebApi.Controllers.Shared;
 using WebApi.Core.Blog;
 using WebApi.Core.Models;
 using WebApi.Models;
+using WebApi.Models.Shared;
 
 namespace WebApi.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class BlogController : ControllerBase
+    public class BlogController : RestControllerBase
     {
-        private readonly IReadPosts _posts;
+        private readonly ILogger<BlogController> _logger;
+        private readonly IReadPosts _blog;
         private readonly IMapper _mapper;
 
-        public BlogController(IReadPosts posts, IMapper mapper)
+        public BlogController(ILogger<BlogController> logger, IActionDescriptorCollectionProvider provider, IReadPosts blog, IMapper mapper)
+            : base(provider)
         {
-            _posts = posts;
+            _logger = logger;
+            _blog = blog;
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public IActionResult Get([FromQuery, Required(AllowEmptyStrings = true)]Author author)
+        [HttpGet(Name = nameof(BlogController))]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<ICollection<PostSummaryDto>>))]
+        public IActionResult Get()
         {
-            if (author == new Author())
+            var getBlog = _blog.GetPosts();
+
+            if (!getBlog.Success)
             {
-                return Ok(_mapper.Map<IReadOnlyCollection<PostDto>>(_posts.Posts));
+                _logger.LogWarning($"{nameof(IReadPosts)}.{nameof(IReadPosts.GetPosts)} failed !!!!");
+                return NoContent();
             }
 
-            return Ok(_mapper.Map<IReadOnlyCollection<PostWithStateDto>>(_posts.PostsByAuthor(author)));
+            var response = ApiResponse<ICollection<PostSummaryDto>>
+                .Create(MapToSummaries(getBlog.Result).ToList());
+
+            response.Add(UrlLink("summaries", nameof(BlogController), null));
+
+            return Ok(response);
+        }
+
+        private IEnumerable<PostSummaryDto> MapToSummaries(IReadOnlyCollection<Post>? posts)
+        {
+            if (posts is null)
+            {
+                yield break;
+            }
+
+            foreach (var post in posts)
+            {
+                var summary = _mapper.Map<PostSummaryDto>(post);
+                summary.Add(UrlLink("detail", nameof(PostsController), new { id = post.Id }));
+
+                yield return summary;
+            }
         }
     }
 }

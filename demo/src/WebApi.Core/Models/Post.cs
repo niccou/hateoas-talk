@@ -1,4 +1,6 @@
-﻿namespace WebApi.Core.Models
+﻿using System;
+
+namespace WebApi.Core.Models
 {
     public record Post
     {
@@ -8,6 +10,7 @@
             Published
         }
 
+        public string Id { get; init; } = "";
         public string Title { get; init; } = "";
         public string Description { get; init; } = "";
         public Author Author { get; init; } = new Author();

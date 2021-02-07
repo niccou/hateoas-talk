@@ -7,6 +7,7 @@ namespace WebApi.Core.Configuration
     {
         public static IServiceCollection AddWebApiCoreConfiguration(this IServiceCollection services)
             => services
-            .AddTransient<IReadPosts, ReadPosts>();
+            .AddTransient<IReadPosts, ReadPosts>()
+            .AddTransient<IPublishPost, PublishPost>();
     }
 }
