@@ -14,9 +14,9 @@ Scenario: En tant qu'anonyme je ne peux voir que la liste des posts publiés
 	When Je veux voir le blog
 	Then Je recois une liste de posts
 	And Je vois uniquement les posts
-		| Author          | Title                                         | Description                                 |
-		| Andy Bloch      | Poker and Blackjack training available        | Sed vel odio consequat nunc viverra mollis. |
-		| Daniel Negreanu | Should We Care if People in the US use a VPN? | Vivamus eu faucibus erat.                   |
+		| Author          | Title                                         |
+		| Andy Bloch      | Poker and Blackjack training available        |
+		| Daniel Negreanu | Should We Care if People in the US use a VPN? |
 
 @Auteur
 Scenario: En tant qu'auteur sur le blog je peux voir la liste des posts publiés et mes posts en brouillon
@@ -24,7 +24,17 @@ Scenario: En tant qu'auteur sur le blog je peux voir la liste des posts publiés
 	When Je veux voir le blog
 	Then Je recois une liste de posts
 	And Je vois uniquement les posts
-		| Author          | Title                                         | Description                                                 |
-		| Andy Bloch      | Poker and Blackjack training available        | Sed vel odio consequat nunc viverra mollis.                 |
-		| Daniel Negreanu | The WSOP POY Oopsie!                          | Phasellus a est sed tellus blandit cursus mollis eget odio. |
-		| Daniel Negreanu | Should We Care if People in the US use a VPN? | Vivamus eu faucibus erat.                                   |
+		| Author          | Title                                         |
+		| Andy Bloch      | Poker and Blackjack training available        |
+		| Daniel Negreanu | The WSOP POY Oopsie!                          |
+		| Daniel Negreanu | Should We Care if People in the US use a VPN? |
+
+@Anonyme
+Scenario: En tant qu'anonyme je consulte le détail d'un post
+	Given Je suis anonyme
+	When Je veux voir le blog
+	And Je veux voir le post Poker and Blackjack training available
+	Then Je recois un détail de post
+	And Le détail du post est
+		| Author          | Title                                         | Description                                 |
+		| Andy Bloch      | Poker and Blackjack training available        | Sed vel odio consequat nunc viverra mollis. |

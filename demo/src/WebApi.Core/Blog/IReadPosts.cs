@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WebApi.Core.Models;
+using WebApi.Core.Shared;
 
 namespace WebApi.Core.Blog
 {
     public interface IReadPosts
     {
-        IReadOnlyCollection<Post> Posts { get; }
+        OperationResult<IReadOnlyCollection<Post>> GetPosts();
 
-        IReadOnlyCollection<Post> PostsByAuthor(Author author);
+        OperationResult<Post> GetPostsById(string id);
     }
 }

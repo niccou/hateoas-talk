@@ -5,7 +5,7 @@ using WebApi.Tests.Shared;
 namespace WebApi.Tests.Bindings.GestionDuBlog
 {
     [Binding, Scope(Tag = "Auteur")]
-    public class LectureParUnAuteurSteps : BackgroundSteps
+    public class LectureParUnAuteurSteps : BlogBackgroundSteps
     {
         protected LectureParUnAuteurSteps(ScenarioContext context, ApiServer server) : base(context, server) { }
 

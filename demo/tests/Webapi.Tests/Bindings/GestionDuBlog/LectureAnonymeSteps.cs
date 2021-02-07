@@ -4,7 +4,7 @@ using WebApi.Tests.Shared;
 namespace WebApi.Tests.Bindings.GestionDuBlog
 {
     [Binding, Scope(Tag = "Anonyme")]
-    public class LectureAnonymeSteps : BackgroundSteps
+    public class LectureAnonymeSteps : BlogBackgroundSteps
     {
         public LectureAnonymeSteps(ScenarioContext context, ApiServer server) : base(context, server) { }
 
