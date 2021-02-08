@@ -33,6 +33,8 @@ namespace WebApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
             }
 
+            app.UseCors(_ => _.AllowAnyOrigin());
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
