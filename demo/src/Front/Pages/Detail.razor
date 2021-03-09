@@ -1,0 +1,21 @@
+﻿@page "/Detail"
+
+<div class="d-block">
+    <h3>@Post.Title</h3>
+    <div class="btn-group-sm">
+        @if (CanPublish)
+        {
+            <button class="btn-danger" @onclick="PublishAsync">Publier</button>
+        }
+        @if (CanUnpublish)
+        {
+            <button class="btn-primary" @onclick="UnpublishAsync">Retirer</button>
+        }
+    </div>
+</div>
+
+<h4>@Post.Author</h4>
+
+<div class="text-body">
+    @Post.Content
+</div>

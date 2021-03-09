@@ -8,7 +8,8 @@ namespace WebApi.Models.Mappers
         {
             CreateMap<Core.Models.Post, PostDetailDto>()
                 .IncludeBase<Core.Models.Post, PostSummaryDto>()
-                .ForMember(_ => _.State, x => x.MapFrom(_ => _.State.ToString()));
+                .ForMember(_ => _.State, x => x.MapFrom(_ => _.State.ToString()))
+                .ForMember(_ => _.Content, x => x.MapFrom(_ => _.Description));
         }
     }
 }

@@ -12,17 +12,6 @@ namespace WebApi
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies())
-                .AddWebApiCoreConfiguration()
-                .AddWebApiRepositoryConfiguration();
-
-            services.AddControllers();
-            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" }));
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -33,7 +22,7 @@ namespace WebApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApi v1"));
             }
 
-            app.UseCors(_ => _.AllowAnyOrigin());
+            app.UseCors(_ => _.AllowAnyOrigin().AllowAnyMethod());
 
             app.UseHttpsRedirection();
 
@@ -42,6 +31,17 @@ namespace WebApi
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies())
+                .AddWebApiCoreConfiguration()
+                .AddWebApiRepositoryConfiguration();
+
+            services.AddControllers();
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApi", Version = "v1" }));
         }
     }
 }

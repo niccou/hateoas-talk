@@ -1,0 +1,23 @@
+﻿<tr>
+    <td>@Post.Author</td>
+    <td>@Post.Title</td>
+    <td>
+        @if (Post.Links.Count > 0)
+        {
+            <div class="row">
+                @if (Post.HasDetail)
+                {
+                    <button type="submit" class=" btn btn-primary" @onclick="NavigateToDetail">Detail</button>
+                }
+                @if (Post.Links.CanPublish())
+                {
+                    <button type="submit" class=" btn btn-primary" @onclick="PublishPost">Publier</button>
+                }
+                @if (Post.Links.CanUnpublish())
+                {
+                    <button type="submit" class=" btn btn-primary" @onclick="UnpublishPost">Retirer</button>
+                }
+            </div>
+        }
+    </td>
+</tr>
