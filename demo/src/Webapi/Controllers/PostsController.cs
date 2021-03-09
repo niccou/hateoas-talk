@@ -16,11 +16,6 @@ namespace WebApi.Controllers
     [ApiController]
     public class PostsController : RestControllerBase
     {
-        private readonly ILogger<PostsController> _logger;
-        private readonly IReadPosts _blog;
-        private readonly IMapper _mapper;
-        private readonly IPublishPost _publisher;
-
         public PostsController(ILogger<PostsController> logger, IActionDescriptorCollectionProvider provider, IReadPosts blog, IPublishPost publisher, IMapper mapper) : base(provider)
         {
             _logger = logger;
@@ -34,6 +29,7 @@ namespace WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
         public IActionResult Get([FromQuery] string id)
         {
+            _logger.LogDebug($"Call {nameof(Get)} for id {id}");
             var getPost = _blog.GetPostsById(id);
 
             if (!getPost.Success || getPost.Result is null)
@@ -54,6 +50,7 @@ namespace WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
         public IActionResult Publish([FromQuery] string id)
         {
+            _logger.LogDebug($"Call {nameof(Publish)} for id {id}");
             var getPost = _blog.GetPostsById(id);
 
             if (!getPost.Success || getPost.Result is null)
@@ -71,6 +68,7 @@ namespace WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
         public IActionResult Unpublish([FromQuery] string id)
         {
+            _logger.LogDebug($"Call {nameof(Unpublish)} for id {id}");
             var getPost = _blog.GetPostsById(id);
 
             if (!getPost.Success || getPost.Result is null)
@@ -82,6 +80,11 @@ namespace WebApi.Controllers
 
             return Get(id);
         }
+
+        private readonly IReadPosts _blog;
+        private readonly ILogger<PostsController> _logger;
+        private readonly IMapper _mapper;
+        private readonly IPublishPost _publisher;
 
         private PostDetailDto MapToDetail(Post post)
         {

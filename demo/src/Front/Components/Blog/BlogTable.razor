@@ -3,26 +3,14 @@
 <table class="table">
     <thead class="thead-light">
         <tr>
-            <th class="col-md-9">Titre</th>
             <th>Auteur</th>
+            <th class="col-md-9" colspan="2">Titre</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var post in Posts)
         {
-            <tr>
-                <td>
-                    @if (HasDetailLink(post))
-                    {
-                        <a href="@DetailLink(post)?.Href">@post.Title</a>
-                    }
-                    else
-                    {
-                        @post.Title
-                    }
-                </td>
-                <td>@post.Author</td>
-            </tr>
+            <BlogTableRow Post="@post" />
         }
     </tbody>
 </table>

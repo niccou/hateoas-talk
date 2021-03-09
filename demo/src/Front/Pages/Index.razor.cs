@@ -18,8 +18,24 @@ namespace Front.Pages
         {
             var response = await Client.GetStringAsync(new Uri("/api/blog", UriKind.Relative)).ConfigureAwait(false);
 
-            Console.WriteLine(response);
+            Posts = response.Deserialize<Response<List<Post>>>()?.Result ?? new List<Post>();
+        }
 
+        protected void Publish()
+        {
+        }
+
+        protected void Unpublish()
+        {
+        }
+
+        private async Task RequestApiAsync(string href, string method)
+        {
+            var request = RequestHelper.CreateRequest(href, method);
+
+            _ = await Client.SendAsync(request).ConfigureAwait(false);
+
+            var response = await Client.GetStringAsync(new Uri("/api/blog", UriKind.Relative)).ConfigureAwait(false);
             Posts = response.Deserialize<Response<List<Post>>>()?.Result ?? new List<Post>();
         }
     }
