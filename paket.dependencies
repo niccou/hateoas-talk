@@ -1,0 +1,12 @@
+source https://api.nuget.org/v3/index.json
+
+nuget AutoMapper.Extensions.Microsoft.DependencyInjection
+nuget Bogus
+nuget coverlet.collector
+nuget FSharp.Core
+nuget Microsoft.Extensions.DependencyInjection.Abstractions
+nuget Newtonsoft.Json
+nuget Swashbuckle.AspNetCore
+nuget xunit.runner.visualstudio
+nuget xunit
+nuget Microsoft.NET.Test.Sdk

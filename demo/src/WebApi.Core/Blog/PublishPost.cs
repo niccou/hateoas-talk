@@ -1,9 +1,8 @@
-﻿using System;
-using WebApi.Core.Shared;
+﻿using WebApi.Core.Shared;
 
 namespace WebApi.Core.Blog
 {
-    internal class PublishPost : IPublishPost
+    public class PublishPost : IPublishPost
     {
         private readonly Services.IPublishPost _publisher;
 

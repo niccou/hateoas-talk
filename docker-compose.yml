@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+    web:
+        build: .
+        image: hateoas-talk-demo
+        ports:
+            - "60000:80"
+            - "60001:443"

@@ -13,7 +13,7 @@ using WebApi.Models.Shared;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class BlogController : RestControllerBase
     {
