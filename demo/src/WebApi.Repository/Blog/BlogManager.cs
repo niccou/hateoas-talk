@@ -9,18 +9,21 @@ namespace WebApi.Repository.Blog
 {
     internal class BlogManager : IGetBlog, IPublishPost
     {
-        private static Faker Faker { get; } = new Faker("fr");
+        private const string IdFormat = "N";
+        private static Faker Faker => new Faker("fr");
 
         private static Core.Models.Blog InternalBlog { get; set; } = new Core.Models.Blog
         {
             Posts = new List<Post>
             {
-                new Post{ Id = "Published1", Title = "Analysis Patterns", Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = "Martin Fowler"}, State = Post.PostState.Published },
-                new Post{ Id = "Published2", Title = "Domain Driven Design", Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = "Eric Evans"}, State = Post.PostState.Published },
-                new Post{ Id = "Unpublished1", Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = "Martin Fowler"}, State = Post.PostState.Draft },
-                new Post{ Id = "Unpublished2", Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = "Eric Evans"}, State = Post.PostState.Draft }
+                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Published },
+                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Published },
+                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Draft },
+                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Draft }
             }
         };
+
+        private static string GenerateId() => System.Guid.NewGuid().ToString(IdFormat);
 
         public OperationResult<Core.Models.Blog> Get() => OperationResult<Core.Models.Blog>.Succeed(InternalBlog);
 

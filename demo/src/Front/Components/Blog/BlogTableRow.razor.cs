@@ -19,12 +19,12 @@ namespace Front.Components.Blog
         [Parameter]
         public Action<Link>? Publish { get; set; }
 
-        public Task PublishPost => Task.Run(() => Publish?.Invoke(Post.Links.PublishPost()!));
+        public Task PublishPost() => Task.Run(() => Publish?.Invoke(Post.Links.PublishPost()!));
 
         [Parameter]
         public Action<Link>? Unpublish { get; set; }
 
-        public Task UnpublishPost => Task.Run(() => Publish?.Invoke(Post.Links.UnpublishPost()!));
+        public Task UnpublishPost() => Task.Run(() => Publish?.Invoke(Post.Links.UnpublishPost()!));
 
         private void NavigateToDetail()
         {
