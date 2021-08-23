@@ -1,0 +1,21 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+
+WORKDIR /app
+
+COPY ./Front/*.csproj .
+
+RUN dotnet restore
+
+COPY ./Front/ .
+
+RUN dotnet publish -c Release -o out
+
+FROM nginx:1.21.1-alpine
+
+WORKDIR /var/www/web
+
+COPY --from=build-env /app/out/wwwroot .
+
+COPY ./Front/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80

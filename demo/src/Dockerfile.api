@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+
+WORKDIR /app
+
+COPY ./WebApi.Repository/*.csproj ./WebApi.Repository/
+COPY ./WebApi.Core/*.csproj ./WebApi.Core/
+COPY ./WebApi/*.csproj ./WebApi/
+
+RUN dotnet restore ./WebApi
+
+COPY ./WebApi.Repository/ ./WebApi.Repository/
+COPY ./WebApi.Core/ ./WebApi.Core/
+COPY ./WebApi/ ./WebApi/
+
+RUN dotnet publish -c Release -o out ./WebApi/
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+
+WORKDIR /app
+
+COPY --from=build-env /app/out .
+
+EXPOSE 5010
+
+ENTRYPOINT ["dotnet", "WebApi.dll"]
