@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using WebApi.Controllers.Shared;
@@ -13,8 +14,9 @@ using WebApi.Models.Shared;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1")]
     public class BlogController : RestControllerBase
     {
         private readonly ILogger<BlogController> _logger;
@@ -29,6 +31,7 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
+        [MapToApiVersion("1")]
         [HttpGet(Name = nameof(BlogController))]
         [ProducesResponseType((int)HttpStatusCode.NoContent)]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<ICollection<PostSummaryDto>>))]
@@ -45,7 +48,7 @@ namespace WebApi.Controllers
             var response = ApiResponse<ICollection<PostSummaryDto>>
                 .Create(MapToSummaries(getBlog.Result).ToList());
 
-            response.Add(UrlLink("summaries", nameof(BlogController), null));
+            response.Add(UrlLink("summaries", nameof(BlogController)));
 
             return Ok(response);
         }
@@ -60,14 +63,18 @@ namespace WebApi.Controllers
             foreach (var post in posts)
             {
                 var summary = _mapper.Map<PostSummaryDto>(post);
-                summary.Add(UrlLink("detail", nameof(PostsController), new { id = post.Id }));
+
+                dynamic postId = new ExpandoObject();
+                postId.id = post.Id;
+
+                summary.Add(UrlLink("detail", nameof(PostsController), postId));
                 if (post.State == Post.PostState.Draft)
                 {
-                    summary.Add(UrlLink("publish", nameof(PostsController.Publish), new { id = post.Id }));
+                    summary.Add(UrlLink("publish", nameof(PostsController.Publish), postId));
                 }
                 if (post.State == Post.PostState.Published)
                 {
-                    summary.Add(UrlLink("unpublish", nameof(PostsController.Unpublish), new { id = post.Id }));
+                    summary.Add(UrlLink("unpublish", nameof(PostsController.Unpublish), postId));
                 }
 
                 yield return summary;

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Dynamic;
 using System.Net;
 using WebApi.Controllers.Shared;
 using WebApi.Core.Blog;
@@ -12,8 +13,10 @@ using WebApi.Models.Shared;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1")]
+    [ApiVersion("2")]
     public class PostsController : RestControllerBase
     {
         public PostsController(ILogger<PostsController> logger, IActionDescriptorCollectionProvider provider, IReadPosts blog, IPublishPost publisher, IMapper mapper) : base(provider)
@@ -27,6 +30,8 @@ namespace WebApi.Controllers
         [HttpGet(Name = nameof(PostsController))]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
+        [MapToApiVersion("1")]
+        //[MapToApiVersion("2")]
         public IActionResult Get([FromQuery] string id)
         {
             _logger.LogDebug($"Call {nameof(Get)} for id {id}");
@@ -40,7 +45,7 @@ namespace WebApi.Controllers
             var response = ApiResponse<PostDetailDto>
                 .Create(MapToDetail(getPost.Result));
 
-            response.Add(UrlLink("summaries", nameof(BlogController), null));
+            response.Add(UrlLink("summaries", nameof(BlogController)));
 
             return Ok(response);
         }
@@ -48,6 +53,8 @@ namespace WebApi.Controllers
         [HttpPost("Publish", Name = nameof(Publish))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
+        [MapToApiVersion("1")]
+        //[MapToApiVersion("2")]
         public IActionResult Publish([FromQuery] string id)
         {
             _logger.LogDebug($"Call {nameof(Publish)} for id {id}");
@@ -66,6 +73,8 @@ namespace WebApi.Controllers
         [HttpPost("Unpublish", Name = nameof(Unpublish))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
+        [MapToApiVersion("1")]
+        //[MapToApiVersion("2")]
         public IActionResult Unpublish([FromQuery] string id)
         {
             _logger.LogDebug($"Call {nameof(Unpublish)} for id {id}");
@@ -89,17 +98,19 @@ namespace WebApi.Controllers
         private PostDetailDto MapToDetail(Post post)
         {
             var detail = _mapper.Map<PostDetailDto>(post);
+            dynamic postId = new ExpandoObject();
+            postId.id = post.Id;
 
-            detail.Add(UrlLink("detail", nameof(PostsController), new { id = post.Id }));
+            detail.Add(UrlLink("detail", nameof(PostsController), postId));
 
             if (post.State == Post.PostState.Draft)
             {
-                detail.Add(UrlLink("publish", nameof(Publish), new { id = post.Id }));
+                detail.Add(UrlLink("publish", nameof(Publish), postId));
             }
 
             if (post.State == Post.PostState.Published)
             {
-                detail.Add(UrlLink("unpublish", nameof(Unpublish), new { id = post.Id }));
+                detail.Add(UrlLink("unpublish", nameof(Unpublish), postId));
             }
 
             return detail;

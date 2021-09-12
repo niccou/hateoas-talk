@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using WebApi.Models.Shared;
 
@@ -18,7 +19,7 @@ namespace WebApi.Controllers.Shared
             _routes = provider.ActionDescriptors.Items;
         }
 
-        protected Link UrlLink(string relation, string routeName, object? values)
+        protected Link UrlLink(string relation, string routeName, dynamic? values = null)
         {
             var route = Route(routeName);
 
@@ -32,6 +33,14 @@ namespace WebApi.Controllers.Shared
             if (method is null)
             {
                 return new Link();
+            }
+
+            var version = GetApiVersion(route);
+
+            if (!string.IsNullOrEmpty(version))
+            {
+                values ??= new ExpandoObject();
+                values.Version = version;
             }
 
             var url = Url.Link(routeName, values);
@@ -58,5 +67,7 @@ namespace WebApi.Controllers.Shared
                 .FirstOrDefault()?
                 .HttpMethods
                 .FirstOrDefault();
+
+        private string GetApiVersion(ActionDescriptor route) => route.GetApiVersionModel().DeclaredApiVersions.LastOrDefault()?.ToString() ?? "";
     }
 }
