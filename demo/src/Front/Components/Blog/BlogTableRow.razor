@@ -7,15 +7,7 @@
             <div class="row">
                 @if (Post.HasDetail)
                 {
-                    <button type="submit" class=" btn btn-primary" @onclick="NavigateToDetail">Detail</button>
-                }
-                @if (Post.Links.CanPublish())
-                {
-                    <button type="submit" class=" btn btn-primary" @onclick="PublishPost">Publier</button>
-                }
-                @if (Post.Links.CanUnpublish())
-                {
-                    <button type="submit" class=" btn btn-primary" @onclick="UnpublishPost">Retirer</button>
+                    <button type="submit" class="btn btn-primary" @onclick="NavigateToDetail">Detail</button>
                 }
             </div>
         }

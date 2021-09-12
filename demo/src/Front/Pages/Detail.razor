@@ -3,13 +3,13 @@
 <div class="d-block">
     <h3>@Post.Title</h3>
     <div class="btn-group-sm">
-        @if (CanPublish)
+        @if (Post.Links.CanPublish())
         {
-            <button class="btn-danger" @onclick="PublishAsync">Publier</button>
+            <button class="btn btn-warning" @onclick="PublishAsync">Publier</button>
         }
-        @if (CanUnpublish)
+        @if (Post.Links.CanUnpublish())
         {
-            <button class="btn-primary" @onclick="UnpublishAsync">Retirer</button>
+            <button class="btn btn-danger" @onclick="UnpublishAsync">Retirer</button>
         }
     </div>
 </div>

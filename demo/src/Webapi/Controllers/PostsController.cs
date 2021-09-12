@@ -45,7 +45,7 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpPut("Publish", Name = nameof(Publish))]
+        [HttpPost("Publish", Name = nameof(Publish))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
         public IActionResult Publish([FromQuery] string id)
@@ -63,7 +63,7 @@ namespace WebApi.Controllers
             return Get(id);
         }
 
-        [HttpPut("Unpublish", Name = nameof(Unpublish))]
+        [HttpPost("Unpublish", Name = nameof(Unpublish))]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(ApiResponse<PostDetailDto>))]
         public IActionResult Unpublish([FromQuery] string id)

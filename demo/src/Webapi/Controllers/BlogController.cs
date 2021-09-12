@@ -61,6 +61,14 @@ namespace WebApi.Controllers
             {
                 var summary = _mapper.Map<PostSummaryDto>(post);
                 summary.Add(UrlLink("detail", nameof(PostsController), new { id = post.Id }));
+                if (post.State == Post.PostState.Draft)
+                {
+                    summary.Add(UrlLink("publish", nameof(PostsController.Publish), new { id = post.Id }));
+                }
+                if (post.State == Post.PostState.Published)
+                {
+                    summary.Add(UrlLink("unpublish", nameof(PostsController.Unpublish), new { id = post.Id }));
+                }
 
                 yield return summary;
             }

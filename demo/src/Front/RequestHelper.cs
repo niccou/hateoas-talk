@@ -23,6 +23,11 @@ namespace Front
             {
                 "GET" => HttpMethod.Get,
                 "PUT" => HttpMethod.Put,
+                "POST" => HttpMethod.Post,
+                "DELETE" => HttpMethod.Delete,
+                "HEAD" => HttpMethod.Head,
+                "PATCH" => HttpMethod.Patch,
+                "TRACE" => HttpMethod.Trace,
                 _ => HttpMethod.Options
             };
     }

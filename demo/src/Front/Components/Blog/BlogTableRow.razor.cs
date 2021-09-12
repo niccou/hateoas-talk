@@ -1,12 +1,14 @@
 ﻿using Front.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 
 namespace Front.Components.Blog
 {
     public partial class BlogTableRow
     {
+        [Inject] public ILogger<BlogTableRow>? Logger { get; set; }
+
         [Inject]
         public PostDetailDto Detail { get; set; } = new PostDetailDto();
 
@@ -19,15 +21,26 @@ namespace Front.Components.Blog
         [Parameter]
         public Action<Link>? Publish { get; set; }
 
-        public Task PublishPost() => Task.Run(() => Publish?.Invoke(Post.Links.PublishPost()!));
+        private void PublishPost()
+        {
+            Logger.LogWarning(nameof(PublishPost));
+            Publish?.Invoke(Post.Links.PublishPost()!);
+            StateHasChanged();
+        }
 
         [Parameter]
         public Action<Link>? Unpublish { get; set; }
 
-        public Task UnpublishPost() => Task.Run(() => Publish?.Invoke(Post.Links.UnpublishPost()!));
+        private void UnpublishPost()
+        {
+            Logger.LogWarning(nameof(UnpublishPost));
+            Publish?.Invoke(Post.Links.UnpublishPost()!);
+            StateHasChanged();
+        }
 
         private void NavigateToDetail()
         {
+            Logger.LogWarning(nameof(NavigateToDetail));
             Detail.Detail = Post.DetailLink;
 
             NavigationManager?.NavigateTo("/Detail");
