@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebApi.Core.Models;
@@ -12,15 +13,26 @@ namespace WebApi.Repository.Blog
         private const string IdFormat = "N";
         private static Faker Faker => new Faker("fr");
 
+        private static IEnumerable<Post> CreatePosts()
+        {
+            var postCount = Faker.Random.Int(0, 20);
+
+            for (int i = 0; i < postCount; i++)
+            {
+                yield return new()
+                {
+                    Id = GenerateId(),
+                    Title = Faker.Lorem.Sentence(),
+                    Description = Faker.Lorem.Paragraphs(2, 5),
+                    Author = new Author { Name = Faker.Person.FullName },
+                    State = Faker.PickRandom<Post.PostState>()
+                };
+            }
+        }
+
         private static Core.Models.Blog InternalBlog { get; set; } = new Core.Models.Blog
         {
-            Posts = new List<Post>
-            {
-                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Published },
-                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Published },
-                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Draft },
-                new Post{ Id = GenerateId(), Title = Faker.Lorem.Sentence(), Description = Faker.Lorem.Paragraphs(2, 5), Author = new Author{Name = Faker.Person.FullName}, State = Post.PostState.Draft }
-            }
+            Posts = new List<Post>(CreatePosts().OrderBy(p => p.Author.Name))
         };
 
         private static string GenerateId() => System.Guid.NewGuid().ToString(IdFormat);

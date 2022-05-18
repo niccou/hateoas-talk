@@ -8,13 +8,13 @@ namespace Front.Components.Blog
     public partial class BlogTableRow
     {
         [Inject]
-        public PostDetailDto Detail { get; set; } = new PostDetailDto();
+        public PostDetailDto Detail { get; set; } = new();
 
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
 
         [Parameter]
-        public Post Post { get; set; } = new Post();
+        public Post Post { get; set; } = new();
 
         [Parameter]
         public Action<Link>? Publish { get; set; }

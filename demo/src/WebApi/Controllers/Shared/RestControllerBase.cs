@@ -50,7 +50,7 @@ namespace WebApi.Controllers.Shared
         }
 
         private ActionDescriptor? Route(string routeName) =>
-            _routes.FirstOrDefault(_ => _.AttributeRouteInfo?.Name.Equals(routeName) ?? false);
+            _routes.FirstOrDefault(_ => _.AttributeRouteInfo?.Name?.Equals(routeName) ?? false);
 
         private string? Method(ActionDescriptor route) =>
             route.ActionConstraints?
